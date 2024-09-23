@@ -16,7 +16,7 @@ public class UserService implements UserServiceIf {
         return userRepo.findAll();
     }
 
-    @Override
+    @Override//add all new product
     public Product saveUser(Product user) {
 
         return userRepo.save(user);
@@ -31,7 +31,7 @@ public class UserService implements UserServiceIf {
     public Product updateById(long id, Product userInfo) {
         Product user = userRepo.findById(id).orElseThrow();
         user.setName(userInfo.getName());
-        user.setAddress(userInfo.getAddress());
+        //user.setAddress(userInfo.getAddress());
         return userRepo.save(user);
     }
 
