@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Entity
 @Getter
 @Setter
@@ -24,6 +26,12 @@ public class Product {
     private String brand;
     @Column(name = "Price")
     private double price;
+
+    @Column(columnDefinition = "TEXT",name = "Description")
+    private String description;
+    @Column(name = "Date")
+    private Date createdAt;
+    private String imageFileName;
 
     
 
