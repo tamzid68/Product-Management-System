@@ -1,0 +1,13 @@
+/* File: styles.css */
+.container {
+    max-width: 1400px;
+}
+
+table {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+table img {
+    width: 50px;
+    height: auto;
+}
