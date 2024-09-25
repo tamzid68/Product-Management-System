@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -39,9 +40,8 @@ public class ProductController {
     @GetMapping(value="/data")
     public String getAllUser(Model model) {
         List<ProductModel> products =userService.getUserAll();
-        System.out.println(products);
-        model.addAttribute("product",products);
-        return "product/index";
+        model.addAttribute("productTale",products);
+        return "products/ind";
     }
 
 
