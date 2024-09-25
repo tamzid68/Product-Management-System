@@ -15,7 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 
 @Table(name = "products")
-public class Product {
+public class ProductModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
@@ -29,10 +29,25 @@ public class Product {
 
     @Column(columnDefinition = "TEXT",name = "Description")
     private String description;
+    @Temporal(TemporalType.DATE)
     @Column(name = "Date")
     private Date createdAt;
     private String imageFileName;
 
-    
+
+
+    @Override
+    public String toString() {
+        return "ProductModel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", brand='" + brand + '\'' +
+                ", price=" + price +
+                ", description='" + description + '\'' +
+                ", createdAt=" + createdAt +
+                ", imageFileName='" + imageFileName + '\'' +
+                '}';
+    }
+
 
 }
