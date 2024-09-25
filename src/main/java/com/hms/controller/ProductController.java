@@ -1,8 +1,10 @@
 package com.hms.controller;
 
 import com.hms.model.Product;
+import com.hms.service.UserService;
 import com.hms.service.UserServiceIf;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,8 +35,10 @@ public class ProductController {
     }
 
     @GetMapping(value = "/show_all")
-    public List<Product> getAllUser() {
-        return userService.getUserAll();
+    public String getAllUser(Model model) {
+        List<Product> products =userService.getUserAll();
+        model.addAttribute("home",products);
+        return "Products/home";
     }
 
 
