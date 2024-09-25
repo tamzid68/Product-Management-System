@@ -1,19 +1,24 @@
 package com.hms.controller;
 
-import com.hms.model.Product;
+import com.hms.model.ProductModel;
 import com.hms.service.UserServiceIf;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
-@RestController
+@Controller
+@RequestMapping("/products")
 public class ProductController {
     @Autowired
     private UserServiceIf userService;
 
+
     @PostMapping(value = "/add_user")
-    public Product saveUser(@RequestBody Product user) {
+    public ProductModel saveUser(@RequestBody ProductModel user) {
 
         return userService.saveUser(user);
     }
@@ -28,18 +33,20 @@ public class ProductController {
 //    }
 
     @GetMapping(value = "/user/{id}")
-    public Product finebyid(@PathVariable("id") long id) {
+    public ProductModel finebyid(@PathVariable("id") long id) {
         return userService.findById(id);
     }
 
-    @GetMapping(value = "/show_all")
-    public List<Product> getAllUser() {
-        return userService.getUserAll();
+    @GetMapping(value="/data")
+    public String getAllUser(Model model) {
+        List<ProductModel> products =userService.getUserAll();
+        model.addAttribute("productTale",products);
+        return "products/ind";
     }
 
 
     @PutMapping(value = "/update/{id}")
-    public Product updateById(@PathVariable long id, @RequestBody Product userInfo) {
+    public ProductModel updateById(@PathVariable long id, @RequestBody ProductModel userInfo) {
         return userService.updateById(id, userInfo);
     }
 

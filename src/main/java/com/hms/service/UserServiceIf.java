@@ -1,18 +1,18 @@
 package com.hms.service;
 
-import com.hms.model.Product;
+import com.hms.model.ProductModel;
 
 import java.util.List;
 
 public interface UserServiceIf {
 
-    Product saveUser(Product user);
+    ProductModel saveUser(ProductModel user);
 
-    Product findById(long id);
+    ProductModel findById(long id);
 
-    public List<Product> getUserAll();
+    public List<ProductModel> getUserAll();
 
-    Product updateById(long id, Product userInfo);
+    ProductModel updateById(long id, ProductModel userInfo);
 
     void deleteById(long id);
 }
