@@ -16,7 +16,7 @@ public class ProductController {
     private ProductServiceIf productService;
 
 
-    @PostMapping(value = "/add_user")
+    @PostMapping(value = "/add")
     public ProductModel saveUser(@RequestBody ProductModel user) {
 
         return productService.saveUser(user);
@@ -36,7 +36,7 @@ public class ProductController {
         return productService.findById(id);
     }
 
-    @GetMapping(value="/data")
+    @GetMapping(value="/getAll")
     public String getAllUser(Model model) {
         List<ProductModel> products = productService.getUserAll();
         model.addAttribute("productTale",products);
