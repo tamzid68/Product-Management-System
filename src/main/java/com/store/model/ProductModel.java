@@ -1,4 +1,4 @@
-package com.hms.model;
+package com.store.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

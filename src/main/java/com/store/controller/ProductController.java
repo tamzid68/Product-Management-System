@@ -1,26 +1,25 @@
-package com.hms.controller;
+package com.store.controller;
 
-import com.hms.model.ProductModel;
-import com.hms.service.UserServiceIf;
+import com.store.model.ProductModel;
+import com.store.service.ProductServiceIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @Controller
 @RequestMapping("/products")
 public class ProductController {
     @Autowired
-    private UserServiceIf userService;
+    private ProductServiceIf productService;
 
 
     @PostMapping(value = "/add_user")
     public ProductModel saveUser(@RequestBody ProductModel user) {
 
-        return userService.saveUser(user);
+        return productService.saveUser(user);
     }
 
 //    @PostMapping(value = "/user")
@@ -34,12 +33,12 @@ public class ProductController {
 
     @GetMapping(value = "/user/{id}")
     public ProductModel finebyid(@PathVariable("id") long id) {
-        return userService.findById(id);
+        return productService.findById(id);
     }
 
     @GetMapping(value="/data")
     public String getAllUser(Model model) {
-        List<ProductModel> products =userService.getUserAll();
+        List<ProductModel> products = productService.getUserAll();
         model.addAttribute("productTale",products);
         return "products/ind";
     }
@@ -47,12 +46,12 @@ public class ProductController {
 
     @PutMapping(value = "/update/{id}")
     public ProductModel updateById(@PathVariable long id, @RequestBody ProductModel userInfo) {
-        return userService.updateById(id, userInfo);
+        return productService.updateById(id, userInfo);
     }
 
     @DeleteMapping(value = "/delete/{id}")
     public void deleteById(@PathVariable long id) {
-        userService.deleteById(id);
+        productService.deleteById(id);
     }
 
 }

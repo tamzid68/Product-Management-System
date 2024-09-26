@@ -1,6 +1,6 @@
-package com.hms.repository;
+package com.store.repository;
 
-import com.hms.model.ProductModel;
+import com.store.model.ProductModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

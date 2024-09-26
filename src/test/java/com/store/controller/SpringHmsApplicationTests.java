@@ -1,4 +1,4 @@
-package com.hms.controller;
+package com.store.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,14 +1,14 @@
-package com.hms.service;
+package com.store.service;
 
-import com.hms.model.ProductModel;
-import com.hms.repository.UserJPARepo;
+import com.store.model.ProductModel;
+import com.store.repository.UserJPARepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class UserService implements UserServiceIf {
+public class ProductService implements ProductServiceIf {
     @Autowired
     UserJPARepo userRepo;
 
