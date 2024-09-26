@@ -1,10 +1,10 @@
-package com.hms.service;
+package com.store.service;
 
-import com.hms.model.ProductModel;
+import com.store.model.ProductModel;
 
 import java.util.List;
 
-public interface UserServiceIf {
+public interface ProductServiceIf {
 
     ProductModel saveUser(ProductModel user);
 
