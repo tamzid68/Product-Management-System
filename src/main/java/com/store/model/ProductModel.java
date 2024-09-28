@@ -24,6 +24,8 @@ public class ProductModel {
     private String name;
     @Column(name = "Brand")
     private String brand;
+    @Column(name = "Category")
+    private String category;
     @Column(name = "Price")
     private double price;
 

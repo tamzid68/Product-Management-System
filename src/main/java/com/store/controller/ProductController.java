@@ -1,5 +1,6 @@
 package com.store.controller;
 
+import com.store.model.ProductDtoModel;
 import com.store.model.ProductModel;
 import com.store.service.ProductServiceIf;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,12 @@ public class ProductController {
         return "products/ind";
     }
 
+    @GetMapping(value = "/create")
+    public String showCreatePage(Model model){
+        System.out.println("test okay");
+        model.addAttribute("productDto", new ProductDtoModel());
+        return "products/createProduct";
+    }
 
     @PutMapping(value = "/update/{id}")
     public ProductModel updateById(@PathVariable long id, @RequestBody ProductModel userInfo) {

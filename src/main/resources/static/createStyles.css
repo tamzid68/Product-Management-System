@@ -1,0 +1,14 @@
+ body {
+            background-color: #f7f7f7;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .btn-primary, .btn-secondary {
+            width: 100px;
+        }
