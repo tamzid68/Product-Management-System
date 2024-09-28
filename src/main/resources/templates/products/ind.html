@@ -11,7 +11,7 @@
 <div class="container mt-4">
   <h2>Products</h2>
   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-    <button class="btn btn-primary mb-3" href="/get">Create Product</button>
+    <a class="btn btn-primary mb-3" href="/products/create">Create Product</a>
   </div>
   <table class="table">
     <thead>
@@ -34,7 +34,7 @@
       <td th:text="${product.price} + ' $'"></td>
       <td th:text="${product.description}"></td>
       <td>
-        <img th:src="@{'/images/' + ${product.imageFileName}}" style="width: 50px; height: auto;"  alt=""/>
+        <img th:src="@{'/images/' + ${product.imageFileName}}" style="width: 100px; height: auto;"  alt=""/>
       </td>
       <td th:text="${#dates.format(product.createdAt, 'yyyy-MM-dd')}"></td>
       <td>
