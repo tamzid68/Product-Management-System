@@ -15,25 +15,25 @@
     <h2 class="text-center mb-4">New Product</h2>
 
     <!-- Form with enctype for file upload -->
-    <form th:object="${productDto}" method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" th:object="${productDto}">
 
     <!-- Product Name -->
       <div class="form-group">
-        <label for="name">Name <span class="text-danger">*</span></label>
+        <label for="name">Name</label>
         <input type="text" class="form-control" id="name" th:field="${productDto.name}" placeholder="Enter product name" required>
         <p th:if="${#fields.hasErrors('name')}" th:errorclass="text-danger" th:errors="${productDto.name}"></p>
       </div>
 
       <!-- Brand -->
       <div class="form-group">
-        <label for="brand">Brand <span class="text-danger">*</span></label>
+        <label for="brand">Brand</label>
         <input type="text" class="form-control" id="brand" th:field="${productDto.brand}" placeholder="Enter brand" required>
         <p th:if="${#fields.hasErrors('brand')}" th:errorclass="text-danger" th:errors="${productDto.brand}"></p>
       </div>
 
       <!-- Category -->
       <div class="form-group">
-        <label for="category">Category <span class="text-danger">*</span></label>
+        <label for="category">Category</label>
         <select class="form-control" id="category" th:field="${productDto.category}" required>
           <option value="">Select Category</option>
           <option value="Phone">Phone</option>
@@ -46,21 +46,21 @@
 
       <!-- Price -->
       <div class="form-group">
-        <label for="price">Price <span class="text-danger">*</span></label>
-        <input type="number" class="form-control" id="price" th:field="${productDto.price}" min="0" placeholder="0.0" required>
+        <label for="price">Price</label>
+        <input type="number" class="form-control" id="price" th:field="${productDto.price}" min="0" required>
         <p th:if="${#fields.hasErrors('price')}" th:errorclass="text-danger" th:errors="${productDto.price}"></p>
       </div>
 
       <!-- Description -->
       <div class="form-group">
-        <label for="description">Description <span class="text-danger">*</span></label>
+        <label for="description">Description</label>
         <textarea class="form-control" id="description" th:field="${productDto.description}" rows="4" placeholder="Enter description (min 10, max 200 characters)" minlength="10" maxlength="200" required></textarea>
         <p th:if="${#fields.hasErrors('description')}" th:errorclass="text-danger" th:errors="${productDto.description}"></p>
       </div>
 
       <!-- Image -->
       <div class="form-group">
-        <label for="imageFile">Image <span class="text-danger">*</span></label>
+        <label for="imageFile">Image</label>
         <input type="file" class="form-control-file" id="imageFile" th:field="${productDto.imageFile}" required>
         <p th:if="${#fields.hasErrors('imageFile')}" th:errorclass="text-danger" th:errors="${productDto.imageFile}"></p>
       </div>
@@ -68,7 +68,7 @@
       <!-- Buttons -->
       <div class="form-group text-center">
         <button type="submit" class="btn btn-primary">Submit</button>
-        <button type="reset" class="btn btn-secondary">Cancel</button>
+        <a class="btn btn-secondary" href="/products" role="button">Cancel</a>
       </div>
 
     </form>
