@@ -33,8 +33,4 @@ public class ProductDtoModel {
 
     private MultipartFile imageFile;
 
-    public ProductModel toProductModel() {
-
-        return null;
-    }
 }

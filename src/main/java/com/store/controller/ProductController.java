@@ -2,7 +2,6 @@ package com.store.controller;
 
 import com.store.model.ProductDtoModel;
 import com.store.model.ProductModel;
-import com.store.repository.UserJPARepo;
 import com.store.service.ProductServiceIf;
 //import jakarta.validation.Path;
 import jakarta.validation.Valid;
@@ -15,10 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.Date;
 import java.util.List;
 
@@ -49,7 +45,7 @@ public class ProductController {
         return productService.findById(id);
     }
 
-    @GetMapping(value="/getAll")
+    @GetMapping({"","/"})
     public String getAllUser(Model model) {
         List<ProductModel> products = productService.getUserAll();
         model.addAttribute("productTale",products);
@@ -63,7 +59,7 @@ public class ProductController {
         return "products/createProduct";
     }
 
-    @PostMapping("/newProduct")
+    @PostMapping("/create")
     public String createProduct(@Valid @ModelAttribute ProductDtoModel productDtoModel, BindingResult result){
         if(productDtoModel.getImageFile().isEmpty()){
             result.addError(new FieldError("productDto", "imageFile" , "The image file is required"));
@@ -71,7 +67,7 @@ public class ProductController {
 
         // Check for validation errors
         if(result.hasErrors()){
-            return "products/createProduct";
+            return "/products/createProduct";
         }
         //save image file
         MultipartFile image = productDtoModel.getImageFile();
@@ -103,8 +99,9 @@ public class ProductController {
         product.setCreatedAt(createdAt);
         product.setImageFileName(storageFileName);
 
-        UserJPARepo userRepo =null ;
-        userRepo.save(product);
+//        UserJPARepo userRepo =null ;
+//        userRepo.save(product);
+        productService.saveUser(product);
 
         return "redirect:/products";
     }
