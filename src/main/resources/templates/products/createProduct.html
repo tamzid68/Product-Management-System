@@ -15,7 +15,7 @@
     <h2 class="text-center mb-4">New Product</h2>
 
     <!-- Form with enctype for file upload -->
-    <form th:object="${productDto}" method="post" enctype="multipart/form-data">
+    <form th:object="${productDto}" method="post" enctype="multipart/form-data" action="@{/products/newProduct}">
 
     <!-- Product Name -->
       <div class="form-group">
@@ -67,7 +67,7 @@
 
       <!-- Buttons -->
       <div class="form-group text-center">
-        <button type="submit" class="btn btn-primary" >Submit</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
         <button type="reset" class="btn btn-secondary">Cancel</button>
       </div>
 

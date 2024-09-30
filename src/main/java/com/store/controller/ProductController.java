@@ -2,8 +2,9 @@ package com.store.controller;
 
 import com.store.model.ProductDtoModel;
 import com.store.model.ProductModel;
+import com.store.repository.UserJPARepo;
 import com.store.service.ProductServiceIf;
-import jakarta.validation.Path;
+//import jakarta.validation.Path;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,8 +14,11 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.Paths;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.List;
 
@@ -65,6 +69,7 @@ public class ProductController {
             result.addError(new FieldError("productDto", "imageFile" , "The image file is required"));
         }
 
+        // Check for validation errors
         if(result.hasErrors()){
             return "products/createProduct";
         }
@@ -75,10 +80,31 @@ public class ProductController {
 
         try{
             String uploadDir ="public/images";
-            Path uploadPath = Paths.get(uploadDir);
+            Path uploadPath =  Paths.get(uploadDir);
+
+            // Ensure the upload directory exists
+            if(!Files.exists(uploadPath)){
+                Files.createDirectories(uploadPath);
+            }
+            try (InputStream inputStream = image.getInputStream()) {
+                Path filePath = uploadPath.resolve(storageFileName); // Use resolve for path
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+            }
         }catch (Exception ex){
-            
+            System.out.println("Exception: "+ex.getMessage());
         }
+
+        ProductModel product = new ProductModel();
+        product.setName(productDtoModel.getName());
+        product.setBrand(productDtoModel.getBrand());
+        product.setCategory(productDtoModel.getCategory());
+        product.setPrice(productDtoModel.getPrice());
+        product.setDescription(productDtoModel.getDescription());
+        product.setCreatedAt(createdAt);
+        product.setImageFileName(storageFileName);
+
+        UserJPARepo userRepo =null ;
+        userRepo.save(product);
 
         return "redirect:/products";
     }

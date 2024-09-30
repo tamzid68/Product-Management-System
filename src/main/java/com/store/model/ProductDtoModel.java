@@ -1,5 +1,6 @@
 package com.store.model;
 
+import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -31,4 +32,9 @@ public class ProductDtoModel {
     private String description;
 
     private MultipartFile imageFile;
+
+    public ProductModel toProductModel() {
+
+        return null;
+    }
 }
