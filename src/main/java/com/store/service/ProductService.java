@@ -1,7 +1,7 @@
 package com.store.service;
 
 import com.store.model.ProductModel;
-import com.store.repository.UserJPARepo;
+import com.store.repository.ProductJPARepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class ProductService implements ProductServiceIf {
     @Autowired
-    UserJPARepo userRepo;
+    ProductJPARepo userRepo;
 
     public List<ProductModel> getUserAll() {
         return userRepo.findAll();
