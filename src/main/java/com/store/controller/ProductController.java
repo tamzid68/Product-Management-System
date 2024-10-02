@@ -2,6 +2,7 @@ package com.store.controller;
 
 import com.store.model.ProductDtoModel;
 import com.store.model.ProductModel;
+import com.store.repository.ProductJPARepo;
 import com.store.service.ProductServiceIf;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,9 +100,8 @@ public class ProductController {
             product.setCreatedAt(createdAt);
             product.setImageFileName(storageFileName);
 
-
         }
-//
+
     private void getDatafromFont(ProductDtoModel productDtoModel) {
 
         product.setName(productDtoModel.getName());
@@ -110,22 +110,32 @@ public class ProductController {
         product.setPrice(productDtoModel.getPrice());
         product.setDescription(productDtoModel.getDescription());
 
-
         productService.saveUser(product);
     }
-//
-//        return "redirect:/products";
-//
 
-   /* @GetMapping(value = "/edit")
-    public String edit(Model model, @RequestParam long id) {
+
+   @GetMapping(value = "/edit")
+    public String showEditPage(Model model, @RequestParam long id) {
         try {
-            productService.updateById(id);
+            product = productService.findById(id);
+            model.addAttribute("product",product);
+
+            ProductDtoModel productDtoModel = new ProductDtoModel();
+
+            productDtoModel.setName(product.getName());
+            productDtoModel.setBrand(product.getBrand());
+            productDtoModel.setCategory(product.getCategory());
+            productDtoModel.setPrice(product.getPrice());
+            productDtoModel.setDescription(product.getDescription());
+
+            model.addAttribute("productDto",productDtoModel);
+
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println("Exception: "+e.getMessage());
+            return "redirect:/products";
         }
-        return productService.updateById(id, userInfo);
-    }*/
+        return "products/EditProduct";
+    }
 
     @DeleteMapping(value = "/delete/{id}")
     public void deleteById(@PathVariable long id) {
