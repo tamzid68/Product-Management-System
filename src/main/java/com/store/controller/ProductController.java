@@ -2,8 +2,8 @@ package com.store.controller;
 
 import com.store.model.ProductDtoModel;
 import com.store.model.ProductModel;
+import com.store.repository.ProductJPARepo;
 import com.store.service.ProductServiceIf;
-//import jakarta.validation.Path;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,9 +20,11 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/products")
+
 public class ProductController {
     @Autowired
     private ProductServiceIf productService;
+    private ProductModel product = new ProductModel();
 
 
     @PostMapping(value = "/add")
@@ -60,55 +62,79 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public String createProduct(@Valid @ModelAttribute ProductDtoModel productDtoModel, BindingResult result){
-        if(productDtoModel.getImageFile().isEmpty()){
-            result.addError(new FieldError("productDto", "imageFile" , "The image file is required"));
+    public String createProduct(@Valid @ModelAttribute ProductDtoModel productDtoModel, BindingResult result) {
+        if (productDtoModel.getImageFile().isEmpty()) {
+            result.addError(new FieldError("productDto", "imageFile", "The image file is required"));
         }
-
         // Check for validation errors
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             return "/products/createProduct";
         }
+        saveImageFile(productDtoModel);
+        getDatafromFont(productDtoModel);
+
+        return "redirect:/products";
+    }
         //save image file
-        MultipartFile image = productDtoModel.getImageFile();
-        Date createdAt = new Date();
-        String storageFileName = createdAt.getTime() + "_" + image.getOriginalFilename();
+        private void saveImageFile(ProductDtoModel productDtoModel) {
 
-        try{
-            String uploadDir ="public/images";
-            Path uploadPath =  Paths.get(uploadDir);
+            MultipartFile image = productDtoModel.getImageFile();
+            Date createdAt = new Date();
+            String storageFileName = createdAt.getTime() + "_" + image.getOriginalFilename();
 
-            // Ensure the upload directory exists
-            if(!Files.exists(uploadPath)){
-                Files.createDirectories(uploadPath);
+            try {
+                String uploadDir = "public/images";
+                Path uploadPath = Paths.get(uploadDir);
+
+                // Ensure the upload directory exists
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+                try (InputStream inputStream = image.getInputStream()) {
+                    Path filePath = uploadPath.resolve(storageFileName); // Use resolve for path
+                    Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+                }
+            } catch (Exception ex) {
+                System.out.println("Exception: " + ex.getMessage());
             }
-            try (InputStream inputStream = image.getInputStream()) {
-                Path filePath = uploadPath.resolve(storageFileName); // Use resolve for path
-                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-            }
-        }catch (Exception ex){
-            System.out.println("Exception: "+ex.getMessage());
+            product.setCreatedAt(createdAt);
+            product.setImageFileName(storageFileName);
+
         }
 
-        ProductModel product = new ProductModel();
+    private void getDatafromFont(ProductDtoModel productDtoModel) {
+
         product.setName(productDtoModel.getName());
         product.setBrand(productDtoModel.getBrand());
         product.setCategory(productDtoModel.getCategory());
         product.setPrice(productDtoModel.getPrice());
         product.setDescription(productDtoModel.getDescription());
-        product.setCreatedAt(createdAt);
-        product.setImageFileName(storageFileName);
 
-//        UserJPARepo userRepo =null ;
-//        userRepo.save(product);
         productService.saveUser(product);
-
-        return "redirect:/products";
     }
 
-    @PutMapping(value = "/update/{id}")
-    public ProductModel updateById(@PathVariable long id, @RequestBody ProductModel userInfo) {
-        return productService.updateById(id, userInfo);
+
+   @GetMapping(value = "/edit")
+    public String showEditPage(Model model, @RequestParam long id) {
+        try {
+            product = productService.findById(id);
+            model.addAttribute("product",product);
+
+            ProductDtoModel productDtoModel = new ProductDtoModel();
+
+            productDtoModel.setName(product.getName());
+            productDtoModel.setBrand(product.getBrand());
+            productDtoModel.setCategory(product.getCategory());
+            productDtoModel.setPrice(product.getPrice());
+            productDtoModel.setDescription(product.getDescription());
+
+            model.addAttribute("productDto",productDtoModel);
+
+        } catch (Exception e) {
+            System.out.println("Exception: "+e.getMessage());
+            return "redirect:/products";
+        }
+        return "products/EditProduct";
     }
 
     @DeleteMapping(value = "/delete/{id}")

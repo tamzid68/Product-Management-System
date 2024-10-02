@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Product</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../static/createStyles.css">
+</head>
+<body>
+
+<div class="container">
+  <div class="form-container">
+    <h2 class="text-center mb-4">Edit Product</h2>
+
+    <!-- Form with enctype for file upload -->
+    <form method="post" enctype="multipart/form-data" th:object="${productDto}">
+
+
+      <!-- Product ID -->
+      <div class="form-group">
+        <label for="name">ID</label>
+        <input readonly class="form-control-plaintext" id="id" th:value="${product.id}" >
+      </div>
+
+      <!-- Product Name -->
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" th:field="${productDto.name}" placeholder="Enter product name" required>
+        <p th:if="${#fields.hasErrors('name')}" th:errorclass="text-danger" th:errors="${productDto.name}"></p>
+      </div>
+
+      <!-- Brand -->
+      <div class="form-group">
+        <label for="brand">Brand</label>
+        <input type="text" class="form-control" id="brand" th:field="${productDto.brand}" placeholder="Enter brand" required>
+        <p th:if="${#fields.hasErrors('brand')}" th:errorclass="text-danger" th:errors="${productDto.brand}"></p>
+      </div>
+
+      <!-- Category -->
+      <div class="form-group">
+        <label for="category">Category</label>
+        <select class="form-control" id="category" th:field="${productDto.category}" required>
+          <option value="">Select Category</option>
+          <option value="Phone">Phone</option>
+          <option value="CPU">CPU</option>
+          <option value="Graphics card">Graphics card</option>
+          <option value="Laptop">Laptop</option>
+        </select>
+        <p th:if="${#fields.hasErrors('category')}" th:errorclass="text-danger" th:errors="${productDto.category}"></p>
+      </div>
+
+      <!-- Price -->
+      <div class="form-group">
+        <label for="price">Price</label>
+        <input type="number" class="form-control" id="price" th:field="${productDto.price}" min="0" required>
+        <p th:if="${#fields.hasErrors('price')}" th:errorclass="text-danger" th:errors="${productDto.price}"></p>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea class="form-control" id="description" th:field="${productDto.description}" rows="4" placeholder="Enter description (min 10, max 200 characters)" minlength="10" maxlength="200" required></textarea>
+        <p th:if="${#fields.hasErrors('description')}" th:errorclass="text-danger" th:errors="${productDto.description}"></p>
+      </div>
+
+      <!-- Image -->
+      <div class="form-group">
+        <label for="imageFile">Image</label>
+        <input type="file" class="form-control-file" id="imageFile" th:field="${productDto.imageFile}" required>
+        <p th:if="${#fields.hasErrors('imageFile')}" th:errorclass="text-danger" th:errors="${productDto.imageFile}"></p>
+      </div>
+
+      <!-- Buttons -->
+      <div class="form-group text-center">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <a class="btn btn-secondary" href="/products" role="button">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

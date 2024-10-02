@@ -36,8 +36,6 @@ public class ProductModel {
     private Date createdAt;
     private String imageFileName;
 
-
-
     @Override
     public String toString() {
         return "ProductModel{" +
