@@ -114,7 +114,7 @@ public class ProductController {
     }
 
 
-   @GetMapping(value = "/edit")
+/*   @GetMapping(value = "/edit")
     public String showEditPage(Model model, @RequestParam long id) {
         try {
             product = productService.findById(id);
@@ -135,11 +135,13 @@ public class ProductController {
             return "redirect:/products";
         }
         return "products/EditProduct";
-    }
+    }*/
 
     @DeleteMapping(value = "/delete/{id}")
     public void deleteById(@PathVariable long id) {
         productService.deleteById(id);
     }
 
+
+    //localhost:3306/myStory?createDatabaseIfNotExist=true
 }
