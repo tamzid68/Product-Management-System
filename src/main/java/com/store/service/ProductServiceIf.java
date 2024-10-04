@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ProductServiceIf {
 
-    ProductModel saveUser(ProductModel user);
+    ProductModel saveProduct(ProductModel user);
 
     ProductModel findById(long id);
 
