@@ -29,17 +29,6 @@ public class ProductController {
     private ProductService productService;
     private MessageUtil log;
 
-    @PostMapping(value = "/add")
-    public ProductModel saveUser(@RequestBody ProductModel user) {
-
-        return productService.saveProduct(user);
-    }
-
-
-    @GetMapping(value = "/user/{id}")
-    public ProductModel finebyid(@PathVariable("id") long id) {
-        return productService.findById(id);
-    }
 
     @GetMapping({"","/"})
     public String getAllUser(Model model) {
@@ -48,13 +37,14 @@ public class ProductController {
         return "products/ind";
     }
 
+    //-----------------------------------------------------------------------------------//
+
     @GetMapping(value = "/create")
     public String showCreatePage(Model model){
-        System.out.println("test okay");
         model.addAttribute("productDto", new ProductDtoModel());
         return "products/createProduct";
     }
-
+    //-----------------------------------------------------------------------------------//
     @PostMapping("/create")
     public String createProduct(@Valid @ModelAttribute ProductDtoModel productDtoModel, BindingResult result) {
         if (productDtoModel.getImageFile().isEmpty()) {
@@ -117,6 +107,7 @@ public class ProductController {
         productService.saveProduct(product);
     }
 
+    //-----------------------------------------------------------------------------------//
 
   @GetMapping(value = "/edit")
     public String showEditPage(Model model, @RequestParam long id) {
@@ -200,11 +191,31 @@ public class ProductController {
         product.setDescription(productDto.getDescription());
     }
 
+//-----------------------------------------------------------------------------------//
 
-    @DeleteMapping(value = "/delete/{id}")
-    public void deleteById(@PathVariable long id) {
-        productService.deleteById(id);
+   @GetMapping("/delete")
+   public String deleteProduct(@RequestParam long id){
+
+        try{
+            ProductModel product = productService.findById(id);
+
+            //delete product image
+            Path imagePath = Paths.get("public/images/" + product.getImageFileName());
+            try {
+                Files.delete(imagePath);
+            }
+            catch (Exception ex){
+                System.out.println("Exception: " + ex.getMessage());
+            }
+            productService.deleteById(id);
+        }
+        catch (Exception ex){
+            System.out.println("Exception: " + ex.getMessage());
+        }
+
+        return "redirect:/products";
     }
+
 
 
     //localhost:3306/myStory?createDatabaseIfNotExist=true
