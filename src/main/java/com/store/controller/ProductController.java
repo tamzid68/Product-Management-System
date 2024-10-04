@@ -13,6 +13,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.*;
 import java.util.Date;
@@ -24,8 +25,6 @@ import java.util.List;
 public class ProductController {
     @Autowired
     private ProductServiceIf productService;
-    private ProductModel product = new ProductModel();
-
 
     @PostMapping(value = "/add")
     public ProductModel saveUser(@RequestBody ProductModel user) {
@@ -33,14 +32,6 @@ public class ProductController {
         return productService.saveUser(user);
     }
 
-//    @PostMapping(value = "/user")
-//    public String saveUser(@RequestParam String name, @RequestParam String address){
-//        User object = new User();
-//        object.setName(name);
-//        object.setAddress(address);
-//        userService.saveUser(object);
-//        return "Saved";
-//    }
 
     @GetMapping(value = "/user/{id}")
     public ProductModel finebyid(@PathVariable("id") long id) {
@@ -70,14 +61,17 @@ public class ProductController {
         if (result.hasErrors()) {
             return "/products/createProduct";
         }
-        saveImageFile(productDtoModel);
-        getDatafromFont(productDtoModel);
+        // Create a new ProductModel instance here, for each request
+        ProductModel product = new ProductModel();
+
+        // Save the image and populate product data
+        saveImageFile(productDtoModel, product);
+        getDatafromFont(productDtoModel, product);
 
         return "redirect:/products";
     }
-        //save image file
-        private void saveImageFile(ProductDtoModel productDtoModel) {
-
+        // Updated saveImageFile method
+        private void saveImageFile(ProductDtoModel productDtoModel, ProductModel product) {
             MultipartFile image = productDtoModel.getImageFile();
             Date createdAt = new Date();
             String storageFileName = createdAt.getTime() + "_" + image.getOriginalFilename();
@@ -88,21 +82,28 @@ public class ProductController {
 
                 // Ensure the upload directory exists
                 if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath);
+                    Files.createDirectories(uploadPath); // Create the directory if it doesn't exist
                 }
-                try (InputStream inputStream = image.getInputStream()) {
-                    Path filePath = uploadPath.resolve(storageFileName); // Use resolve for path
-                    Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-                }
-            } catch (Exception ex) {
-                System.out.println("Exception: " + ex.getMessage());
-            }
-            product.setCreatedAt(createdAt);
-            product.setImageFileName(storageFileName);
 
+                // Save the file
+                try (InputStream inputStream = image.getInputStream()) {
+                    Path filePath = uploadPath.resolve(storageFileName); // Resolve to get the full file path
+                    Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING); // Copy the file
+                }
+
+                // Set file-related properties in the Product model
+                product.setImageFileName(storageFileName);
+                product.setCreatedAt(createdAt);
+
+            } catch (IOException ex) {
+                // Log error and add meaningful output
+                System.err.println("File upload failed: " + ex.getMessage());
+                // Optionally, you can set an error flag in the model or handle it appropriately.
+            }
         }
 
-    private void getDatafromFont(ProductDtoModel productDtoModel) {
+    // Updated getDatafromFont method
+    private void getDatafromFont(ProductDtoModel productDtoModel, ProductModel product) {
 
         product.setName(productDtoModel.getName());
         product.setBrand(productDtoModel.getBrand());
