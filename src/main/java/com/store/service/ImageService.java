@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Date;
 
 
 @Service
@@ -35,6 +36,11 @@ public class ImageService implements ImageServiceIf {
                 Files.copy(inputStream, uploadPath.resolve(storageFileName), StandardCopyOption.REPLACE_EXISTING);
             }
             product.setImageFileName(storageFileName);
+
+            // Set createdAt property
+            Date createdAt = new Date();
+            product.setCreatedAt(createdAt);
+
         } catch (IOException ex) {
             log.error("File upload failed: {}", ex.getMessage());
         }
@@ -43,6 +49,10 @@ public class ImageService implements ImageServiceIf {
     @Override
     public void updateImageFile(ProductModel product, MultipartFile imageFile) {
         if (imageFile != null && !imageFile.isEmpty()) {
+            // Set createdAt property
+            Date createdAt = new Date();
+            product.setCreatedAt(createdAt);
+
             deleteImageFile(product.getImageFileName());
             saveNewImage(product, imageFile);
         }

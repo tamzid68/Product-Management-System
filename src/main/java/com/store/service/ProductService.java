@@ -6,6 +6,7 @@ import com.store.repository.ProductJPARepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -56,6 +57,10 @@ public class ProductService implements ProductServiceIf {
         product.setCategory(productDto.getCategory());
         product.setPrice(productDto.getPrice());
         product.setDescription(productDto.getDescription());
+
+        // Set createdAt property
+        Date createdAt = new Date();
+        product.setCreatedAt(createdAt);
     }
 
 
