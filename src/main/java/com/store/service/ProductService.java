@@ -17,7 +17,7 @@ public class ProductService implements ProductServiceIf {
     }
 
     @Override//add all new product
-    public ProductModel saveUser(ProductModel user) {
+    public ProductModel saveProduct(ProductModel user) {
 
         return userRepo.save(user);
     }

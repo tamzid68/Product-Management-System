@@ -2,9 +2,10 @@ package com.store.controller;
 
 import com.store.model.ProductDtoModel;
 import com.store.model.ProductModel;
-import com.store.repository.ProductJPARepo;
-import com.store.service.ProductServiceIf;
+import com.store.service.ProductService;
 import jakarta.validation.Valid;
+import org.aspectj.bridge.ISourceLocation;
+import org.aspectj.bridge.MessageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,24 +20,15 @@ import java.nio.file.*;
 import java.util.Date;
 import java.util.List;
 
+
 @Controller
 @RequestMapping("/products")
 
 public class ProductController {
     @Autowired
-    private ProductServiceIf productService;
+    private ProductService productService;
+    private MessageUtil log;
 
-    @PostMapping(value = "/add")
-    public ProductModel saveUser(@RequestBody ProductModel user) {
-
-        return productService.saveUser(user);
-    }
-
-
-    @GetMapping(value = "/user/{id}")
-    public ProductModel finebyid(@PathVariable("id") long id) {
-        return productService.findById(id);
-    }
 
     @GetMapping({"","/"})
     public String getAllUser(Model model) {
@@ -45,13 +37,14 @@ public class ProductController {
         return "products/ind";
     }
 
+    //-----------------------------------------------------------------------------------//
+
     @GetMapping(value = "/create")
     public String showCreatePage(Model model){
-        System.out.println("test okay");
         model.addAttribute("productDto", new ProductDtoModel());
         return "products/createProduct";
     }
-
+    //-----------------------------------------------------------------------------------//
     @PostMapping("/create")
     public String createProduct(@Valid @ModelAttribute ProductDtoModel productDtoModel, BindingResult result) {
         if (productDtoModel.getImageFile().isEmpty()) {
@@ -111,14 +104,15 @@ public class ProductController {
         product.setPrice(productDtoModel.getPrice());
         product.setDescription(productDtoModel.getDescription());
 
-        productService.saveUser(product);
+        productService.saveProduct(product);
     }
 
+    //-----------------------------------------------------------------------------------//
 
-/*   @GetMapping(value = "/edit")
+  @GetMapping(value = "/edit")
     public String showEditPage(Model model, @RequestParam long id) {
         try {
-            product = productService.findById(id);
+            ProductModel product = productService.findById(id);
             model.addAttribute("product",product);
 
             ProductDtoModel productDtoModel = new ProductDtoModel();
@@ -136,12 +130,92 @@ public class ProductController {
             return "redirect:/products";
         }
         return "products/EditProduct";
-    }*/
-
-    @DeleteMapping(value = "/delete/{id}")
-    public void deleteById(@PathVariable long id) {
-        productService.deleteById(id);
     }
+
+    @PostMapping("/edit")
+    public String updateProduct(Model model, @RequestParam long id,
+                                @Valid @ModelAttribute ProductDtoModel productDto,
+                                BindingResult result) {
+        if (result.hasErrors()) {
+            return "products/EditProduct"; // Ensure the model is populated for the view
+        }
+
+        try {
+            ProductModel product = productService.findById(id);
+            model.addAttribute("product", product);
+
+            handleImageUpdate(product, productDto.getImageFile());
+
+            updateProductDetails(product, productDto);
+
+            productService.saveProduct(product);
+        } catch (Exception ex) {
+            log.error("Error updating product with id " + id + ": " + ex.getMessage(), (ISourceLocation) ex);
+        }
+        return "redirect:/products";
+    }
+
+    private void handleImageUpdate(ProductModel product, MultipartFile imageFile) {
+        if (imageFile != null && !imageFile.isEmpty()) {
+            deleteOldImage(product.getImageFileName());
+            saveNewImage(product, imageFile);
+        }
+    }
+
+    private void deleteOldImage(String oldImageName) {
+        Path oldImagePath = Paths.get("public/images/" + oldImageName);
+        try {
+            if (Files.exists(oldImagePath)) {
+                Files.delete(oldImagePath);
+            }
+        } catch (IOException ex) {
+            log.error("Error deleting old image: " + ex.getMessage());
+        }
+    }
+
+    private void saveNewImage(ProductModel product, MultipartFile imageFile) {
+        String storageFileName = System.currentTimeMillis() + "-" + imageFile.getOriginalFilename();
+        try (InputStream inputStream = imageFile.getInputStream()) {
+            Files.copy(inputStream, Paths.get("public/images/" + storageFileName), StandardCopyOption.REPLACE_EXISTING);
+            product.setImageFileName(storageFileName);
+        } catch (IOException ex) {
+            log.error("Error saving new image: " + ex.getMessage(), (ISourceLocation) ex);
+        }
+    }
+
+    private void updateProductDetails(ProductModel product, ProductDtoModel productDto) {
+        product.setName(productDto.getName());
+        product.setBrand(productDto.getBrand());
+        product.setCategory(productDto.getCategory());
+        product.setPrice(productDto.getPrice());
+        product.setDescription(productDto.getDescription());
+    }
+
+//-----------------------------------------------------------------------------------//
+
+   @GetMapping("/delete")
+   public String deleteProduct(@RequestParam long id){
+
+        try{
+            ProductModel product = productService.findById(id);
+
+            //delete product image
+            Path imagePath = Paths.get("public/images/" + product.getImageFileName());
+            try {
+                Files.delete(imagePath);
+            }
+            catch (Exception ex){
+                System.out.println("Exception: " + ex.getMessage());
+            }
+            productService.deleteById(id);
+        }
+        catch (Exception ex){
+            System.out.println("Exception: " + ex.getMessage());
+        }
+
+        return "redirect:/products";
+    }
+
 
 
     //localhost:3306/myStory?createDatabaseIfNotExist=true
