@@ -14,14 +14,19 @@ public class ApiProductController {
     private ProductService productService;
 
     @PostMapping(value = "/add_product")
-    public ProductModel saveProduct(@RequestBody ProductModel product){
+    public ProductModel saveProduct(@RequestBody ProductModel product) {
 
         return productService.saveProduct(product);
     }
 
+    @GetMapping(value = "/getBy/{id}")
+    public ProductModel getById(@PathVariable long id){
+        return productService.findById(id);
+    }
     @GetMapping(value = "/get_product")
-    public List<ProductModel> showAllProduct(){
-        return productService.getUserAll();
+    public List<ProductModel> showAllProduct() {
+
+        return productService.getAllProduct();
     }
 
     @PutMapping(value = "/update/{id}")
