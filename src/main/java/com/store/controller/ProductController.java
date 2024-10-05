@@ -2,22 +2,19 @@ package com.store.controller;
 
 import com.store.model.ProductDtoModel;
 import com.store.model.ProductModel;
+import com.store.service.ImageService;
 import com.store.service.ProductService;
 import jakarta.validation.Valid;
 import org.aspectj.bridge.ISourceLocation;
-import org.aspectj.bridge.MessageUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.*;
-import java.util.Date;
 import java.util.List;
 
 
@@ -25,14 +22,20 @@ import java.util.List;
 @RequestMapping("/products")
 
 public class ProductController {
+    private final ProductService productService;
+    private final ImageService imageService;
+    private final Logger log = LoggerFactory.getLogger(ProductController.class);
+
     @Autowired
-    private ProductService productService;
-    private MessageUtil log;
+    public ProductController(ProductService productService, ImageService imageService) {
+        this.productService = productService;
+        this.imageService = imageService;
+    }
 
 
-    @GetMapping({"","/"})
+    @GetMapping({"", "/"})
     public String getAllUser(Model model) {
-        List<ProductModel> products = productService.getUserAll();
+        List<ProductModel> products = productService.getAllProduct();
         model.addAttribute("productTale",products);
         return "products/ind";
     }
@@ -44,7 +47,7 @@ public class ProductController {
         model.addAttribute("productDto", new ProductDtoModel());
         return "products/createProduct";
     }
-    //-----------------------------------------------------------------------------------//
+
     @PostMapping("/create")
     public String createProduct(@Valid @ModelAttribute ProductDtoModel productDtoModel, BindingResult result) {
         if (productDtoModel.getImageFile().isEmpty()) {
@@ -58,13 +61,14 @@ public class ProductController {
         ProductModel product = new ProductModel();
 
         // Save the image and populate product data
-        saveImageFile(productDtoModel, product);
-        getDatafromFont(productDtoModel, product);
+        imageService.saveImageFile(productDtoModel, product);
+        productService.saveProductData(productDtoModel, product);
+
 
         return "redirect:/products";
     }
         // Updated saveImageFile method
-        private void saveImageFile(ProductDtoModel productDtoModel, ProductModel product) {
+        /*private void saveImageFile(ProductDtoModel productDtoModel, ProductModel product) {
             MultipartFile image = productDtoModel.getImageFile();
             Date createdAt = new Date();
             String storageFileName = createdAt.getTime() + "_" + image.getOriginalFilename();
@@ -105,7 +109,7 @@ public class ProductController {
         product.setDescription(productDtoModel.getDescription());
 
         productService.saveProduct(product);
-    }
+    }*/
 
     //-----------------------------------------------------------------------------------//
 
@@ -115,18 +119,19 @@ public class ProductController {
             ProductModel product = productService.findById(id);
             model.addAttribute("product",product);
 
-            ProductDtoModel productDtoModel = new ProductDtoModel();
+            /*ProductDtoModel productDtoModel = new ProductDtoModel();
 
             productDtoModel.setName(product.getName());
             productDtoModel.setBrand(product.getBrand());
             productDtoModel.setCategory(product.getCategory());
             productDtoModel.setPrice(product.getPrice());
-            productDtoModel.setDescription(product.getDescription());
+            productDtoModel.setDescription(product.getDescription());*/
 
+            ProductDtoModel productDtoModel = productService.convertToDto(product);
             model.addAttribute("productDto",productDtoModel);
 
         } catch (Exception e) {
-            System.out.println("Exception: "+e.getMessage());
+            log.error("Exception while fetching product with id {}: {}", id, e.getMessage());
             return "redirect:/products";
         }
         return "products/EditProduct";
@@ -144,9 +149,11 @@ public class ProductController {
             ProductModel product = productService.findById(id);
             model.addAttribute("product", product);
 
-            handleImageUpdate(product, productDto.getImageFile());
+            imageService.updateImageFile(product, productDto.getImageFile());
+            //handleImageUpdate(product, productDto.getImageFile());
 
-            updateProductDetails(product, productDto);
+            productService.updateProductDetails(product, productDto);
+            //updateProductDetails(product, productDto);
 
             productService.saveProduct(product);
         } catch (Exception ex) {
@@ -155,7 +162,7 @@ public class ProductController {
         return "redirect:/products";
     }
 
-    private void handleImageUpdate(ProductModel product, MultipartFile imageFile) {
+ /*   private void handleImageUpdate(ProductModel product, MultipartFile imageFile) {
         if (imageFile != null && !imageFile.isEmpty()) {
             deleteOldImage(product.getImageFileName());
             saveNewImage(product, imageFile);
@@ -181,22 +188,33 @@ public class ProductController {
         } catch (IOException ex) {
             log.error("Error saving new image: " + ex.getMessage(), (ISourceLocation) ex);
         }
-    }
+    }*/
 
-    private void updateProductDetails(ProductModel product, ProductDtoModel productDto) {
+   /* private void updateProductDetails(ProductModel product, ProductDtoModel productDto) {
         product.setName(productDto.getName());
         product.setBrand(productDto.getBrand());
         product.setCategory(productDto.getCategory());
         product.setPrice(productDto.getPrice());
         product.setDescription(productDto.getDescription());
-    }
+    }*/
 
 //-----------------------------------------------------------------------------------//
 
-   @GetMapping("/delete")
-   public String deleteProduct(@RequestParam long id){
+    @GetMapping("/delete")
+    public String deleteProduct(@RequestParam long id) {
 
-        try{
+        try {
+            ProductModel product = productService.findById(id);
+            imageService.deleteImageFile(product.getImageFileName());
+            productService.deleteById(id);
+        } catch (Exception ex) {
+            log.error("Error deleting product with id {}: {}", id, ex.getMessage());
+        }
+        return "redirect:/products";
+    }
+
+
+        /*try{
             ProductModel product = productService.findById(id);
 
             //delete product image
@@ -215,7 +233,7 @@ public class ProductController {
 
         return "redirect:/products";
     }
-
+*/
 
 
     //localhost:3306/myStory?createDatabaseIfNotExist=true
