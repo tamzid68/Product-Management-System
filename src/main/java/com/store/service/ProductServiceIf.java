@@ -19,7 +19,7 @@ public interface ProductServiceIf {
 
     List<ProductModel> getAllProduct();
 
-    ProductModel updateById(long id, ProductModel userInfo);
+    //ProductModel updateById(long id, ProductModel userInfo);
 
     void deleteById(long id);
 }
