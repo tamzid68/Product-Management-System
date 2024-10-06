@@ -1,28 +1,85 @@
 # Product Management System
 
-This is a **Spring Boot** application that serves as a simple **Product Management System**. The system allows users to perform CRUD (Create, Read, Update, Delete) operations on products. It features a web interface as well as an API that can be used to manage products.
+## Project Overview
+The **Product Management System** is a Spring Boot application designed for managing product data with basic CRUD (Create, Read, Update, Delete) functionalities. It utilizes a microservices architecture and follows SOLID design principles, allowing for modularity and scalability. The application can also be run as a web application, providing an interactive user interface.
 
-## Features
+## Key Components
 
-- **Product Management**: Create, read, update, and delete products.
-- **Image Upload**: Upload and manage product images.
-- **Validation**: Validates product details (name, brand, price, etc.) before saving.
-- **API Endpoints**: REST API to interact with the system programmatically.
+- **Architecture**:
+  - **Microservices**: The application is structured into independent services, each responsible for specific functionalities, enhancing scalability and maintainability.
+  - **SOLID Principles**: The design follows SOLID principles, ensuring high cohesion and low coupling between components, making the system easier to manage and extend.
 
-## Technologies Used
+- **Model**: Represents the data structure of the application.
+  - **Product**: A class representing a product with attributes such as `id`, `name`, `description`, and `price`.
 
-- **Java**
-- **Spring Boot**
-- **Spring Data JPA**
-- **Thymeleaf** (for HTML templates)
-- **Hibernate** (for ORM)
-- **Jakarta Validation** (for validating input)
-- **MySQL** (Database)
+- **Controller**: Manages the incoming HTTP requests and responses.
+  - **ApiProductController**: A REST controller that provides endpoints for product operations.
+  - **ProductController**: A controller that handles web requests related to product management.
 
-## Table of Contents
+- **Service**: Contains business logic.
+  - A `ProductService` typically manages operations related to products.
 
-- [Installation](#installation)
-- [Database Setup](#database-setup)
-- [Running the Application](#running-the-application)
-- [API Endpoints](#api-endpoints)
-- [Web Interface](#web-interface)
+- **Repository**: Interfaces with the database to perform CRUD operations.
+
+## Functionality
+
+- **Create Product**:
+  - **Endpoint**: `POST /api/products`
+  - **Description**: Adds a new product to the database.
+  - **Request Body**: JSON representation of the product (name, description, price).
+
+- **Read Products**:
+  - **Endpoint**: `GET /api/products`
+  - **Description**: Retrieves a list of all products.
+  - **Response**: JSON array of products.
+
+- **Read Product by ID**:
+  - **Endpoint**: `GET /api/products/{id}`
+  - **Description**: Fetches details of a specific product by its ID.
+  - **Response**: JSON representation of the product.
+
+- **Update Product**:
+  - **Endpoint**: `PUT /api/products/{id}`
+  - **Description**: Updates the details of an existing product.
+  - **Request Body**: JSON representation of the product with updated fields.
+
+- **Delete Product**:
+  - **Endpoint**: `DELETE /api/products/{id}`
+  - **Description**: Deletes a product by its ID.
+
+## Setup Instructions
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/tamzid68/spingboot_product_CRUD-
+
+Navigate to Project Directory:
+
+bash
+
+cd spingboot_product_CRUD-
+Build the Project:
+
+bash
+
+mvn clean install
+Run the Application:
+
+bash
+
+mvn spring-boot:run
+Access the Application: Open a web browser and navigate to http://localhost:8080/api/products.
+
+Deployment
+The application is deployed online and can be accessed at the following link: Product Management System Online
+
+Postman Workspace and API Documentation
+Postman Workspace: Access your collection in the public workspace at Postman Workspace.
+
+Published API Documentation: View the API documentation at API Documentation.
+
+Future Enhancements
+Implement error handling and validation.
+Add user authentication and authorization.
+Introduce unit and integration tests.
+Enhance the UI with a frontend framework like React or Angular.
