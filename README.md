@@ -70,13 +70,14 @@ bash
 mvn spring-boot:run
 Access the Application: Open a web browser and navigate to http://localhost:8080/api/products.
 
+
 Deployment
-The application is deployed online and can be accessed at the following link: Product Management System Online
+The application is deployed online and can be accessed at the following link: https://humorous-expression-production.up.railway.app/
 
 Postman Workspace and API Documentation
-Postman Workspace: Access your collection in the public workspace at Postman Workspace.
+Postman Workspace: Access your collection in the public workspace at https://www.postman.com/asmtamzid/my-workspace/overview.
 
-Published API Documentation: View the API documentation at API Documentation.
+Published API Documentation: View the API documentation at https://documenter.getpostman.com/view/37703361/2sAXxMgtwJ.
 
 Future Enhancements
 Implement error handling and validation.
