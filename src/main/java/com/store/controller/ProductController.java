@@ -67,49 +67,7 @@ public class ProductController {
 
         return "redirect:/products";
     }
-        // Updated saveImageFile method
-        /*private void saveImageFile(ProductDtoModel productDtoModel, ProductModel product) {
-            MultipartFile image = productDtoModel.getImageFile();
-            Date createdAt = new Date();
-            String storageFileName = createdAt.getTime() + "_" + image.getOriginalFilename();
 
-            try {
-                String uploadDir = "public/images";
-                Path uploadPath = Paths.get(uploadDir);
-
-                // Ensure the upload directory exists
-                if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath); // Create the directory if it doesn't exist
-                }
-
-                // Save the file
-                try (InputStream inputStream = image.getInputStream()) {
-                    Path filePath = uploadPath.resolve(storageFileName); // Resolve to get the full file path
-                    Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING); // Copy the file
-                }
-
-                // Set file-related properties in the Product model
-                product.setImageFileName(storageFileName);
-                product.setCreatedAt(createdAt);
-
-            } catch (IOException ex) {
-                // Log error and add meaningful output
-                System.err.println("File upload failed: " + ex.getMessage());
-                // Optionally, you can set an error flag in the model or handle it appropriately.
-            }
-        }
-
-    // Updated getDatafromFont method
-    private void getDatafromFont(ProductDtoModel productDtoModel, ProductModel product) {
-
-        product.setName(productDtoModel.getName());
-        product.setBrand(productDtoModel.getBrand());
-        product.setCategory(productDtoModel.getCategory());
-        product.setPrice(productDtoModel.getPrice());
-        product.setDescription(productDtoModel.getDescription());
-
-        productService.saveProduct(product);
-    }*/
 
     //-----------------------------------------------------------------------------------//
 
@@ -118,14 +76,6 @@ public class ProductController {
         try {
             ProductModel product = productService.findById(id);
             model.addAttribute("product",product);
-
-            /*ProductDtoModel productDtoModel = new ProductDtoModel();
-
-            productDtoModel.setName(product.getName());
-            productDtoModel.setBrand(product.getBrand());
-            productDtoModel.setCategory(product.getCategory());
-            productDtoModel.setPrice(product.getPrice());
-            productDtoModel.setDescription(product.getDescription());*/
 
             ProductDtoModel productDtoModel = productService.convertToDto(product);
             model.addAttribute("productDto",productDtoModel);
@@ -162,41 +112,6 @@ public class ProductController {
         return "redirect:/products";
     }
 
- /*   private void handleImageUpdate(ProductModel product, MultipartFile imageFile) {
-        if (imageFile != null && !imageFile.isEmpty()) {
-            deleteOldImage(product.getImageFileName());
-            saveNewImage(product, imageFile);
-        }
-    }
-
-    private void deleteOldImage(String oldImageName) {
-        Path oldImagePath = Paths.get("public/images/" + oldImageName);
-        try {
-            if (Files.exists(oldImagePath)) {
-                Files.delete(oldImagePath);
-            }
-        } catch (IOException ex) {
-            log.error("Error deleting old image: " + ex.getMessage());
-        }
-    }
-
-    private void saveNewImage(ProductModel product, MultipartFile imageFile) {
-        String storageFileName = System.currentTimeMillis() + "-" + imageFile.getOriginalFilename();
-        try (InputStream inputStream = imageFile.getInputStream()) {
-            Files.copy(inputStream, Paths.get("public/images/" + storageFileName), StandardCopyOption.REPLACE_EXISTING);
-            product.setImageFileName(storageFileName);
-        } catch (IOException ex) {
-            log.error("Error saving new image: " + ex.getMessage(), (ISourceLocation) ex);
-        }
-    }*/
-
-   /* private void updateProductDetails(ProductModel product, ProductDtoModel productDto) {
-        product.setName(productDto.getName());
-        product.setBrand(productDto.getBrand());
-        product.setCategory(productDto.getCategory());
-        product.setPrice(productDto.getPrice());
-        product.setDescription(productDto.getDescription());
-    }*/
 
 //-----------------------------------------------------------------------------------//
 
@@ -212,29 +127,6 @@ public class ProductController {
         }
         return "redirect:/products";
     }
-
-
-        /*try{
-            ProductModel product = productService.findById(id);
-
-            //delete product image
-            Path imagePath = Paths.get("public/images/" + product.getImageFileName());
-            try {
-                Files.delete(imagePath);
-            }
-            catch (Exception ex){
-                System.out.println("Exception: " + ex.getMessage());
-            }
-            productService.deleteById(id);
-        }
-        catch (Exception ex){
-            System.out.println("Exception: " + ex.getMessage());
-        }
-
-        return "redirect:/products";
-    }
-*/
-
 
     //localhost:3306/myStory?createDatabaseIfNotExist=true
 }
